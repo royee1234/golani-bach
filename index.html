@@ -50,7 +50,6 @@
     --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
     --sun: rgba(222, 184, 72, .5); --ground: #1A231C;
   }
-  .brand img { filter: brightness(2.6) saturate(.6); }
 }
 
 * { box-sizing: border-box; }
@@ -71,7 +70,8 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
 .top .acts { display: flex; align-items: center; gap: 8px; }
 .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; text-align: right; }
-.brand img { width: 46px; height: 53px; }
+.brand .mark { width: 60px; height: 60px; flex: none; position: relative; }
+.brand .mark canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .brand b { display: block; font-family: var(--f-display); font-size: 1.45rem; line-height: 1; color: var(--brand); font-weight: 400; }
 .brand span { font-size: .95rem; color: var(--ink-2); }
 .pill-btn { border: 0; background: var(--chip); color: var(--ink); border-radius: 999px; padding: 8px 16px; font-weight: 600; cursor: pointer; white-space: nowrap; }
@@ -306,7 +306,7 @@ dialog h2 { font-size: 1.3rem; font-weight: 800; }
 <div class="wrap" id="app">
   <header class="top" id="top" hidden>
     <button class="brand" id="brandBtn" type="button" aria-label="לדף הבית">
-      <img src="art/tree.png" alt="">
+      <span class="mark" id="brandMark"></span>
       <div><b>בא״ח גולני</b><span>אגף ההדרכה</span></div>
     </button>
     <div class="acts">
@@ -938,12 +938,19 @@ $('#passForm').addEventListener('submit', async e => {
   $('#passDlg').close(); toast('הסיסמה הוחלפה');
 });
 
-/* ---------- sign-in art: the Golani emblem on a golden sun, looping (breeze, sheen, falling leaves) ---------- */
-let treeEl = null, treeKick = null;
+/* ---------- emblem art: the Golani emblem on a golden sun, looping (breeze, sheen, falling leaves) ---------- */
+let gateEl = null, gateKick = null;
 function treeArt() {
-  if (treeEl) { treeKick(); return treeEl; }
+  if (gateEl) { gateKick(); return gateEl; }
+  [gateEl, gateKick] = emblemArt(h('div', { class: 'gate-art' }), { leaves: true });
+  return gateEl;
+}
+// the same art, small, in the header next to the title
+function brandArt() { emblemArt($('#brandMark'), { leaves: false, sway: 3 }); }
+
+function emblemArt(treeEl, { leaves: withLeaves = true, sway = 1 } = {}) {
   const canvas = h('canvas', { 'aria-hidden': 'true' });
-  treeEl = h('div', { class: 'gate-art' }, canvas);
+  treeEl.append(canvas);
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const img = new Image(); img.src = 'art/emblem.png';
   const off = document.createElement('canvas'), fx = document.createElement('canvas');
@@ -959,6 +966,7 @@ function treeArt() {
     off.width = Math.round(ew * dpr); off.height = Math.round(eh * dpr);
     const o = off.getContext('2d'); o.imageSmoothingQuality = 'high'; o.drawImage(img, 0, 0, off.width, off.height);
     fx.width = off.width + pad * 2 * dpr; fx.height = off.height;
+    if (!L) t0 = 0; // first time it has a size (the header starts hidden): play the intro from there
     L = { w: box.width, h: box.height, dpr, ew, eh, pad, x: (box.width - ew) / 2, y: box.height * .9 - eh };
     if (!running) draw(reduce ? 9 : 0);
   }
@@ -989,7 +997,7 @@ function treeArt() {
 
     // emblem in strips: canopy sways, trunk and roots stay put
     const f = fx.getContext('2d'); f.setTransform(1, 0, 0, 1, 0, 0); f.clearRect(0, 0, fx.width, fx.height);
-    const A = reduce ? 0 : eh * .011, trunkTop = .58, step = 2;
+    const A = reduce ? 0 : eh * .011 * sway, trunkTop = .58, step = 2;
     for (let sy = 0; sy < off.height; sy += step) {
       const v = sy / off.height, k = Math.pow(Math.max(0, (trunkTop - v) / trunkTop), 1.4);
       const dx = (A * k * (Math.sin(sec * 1.1 + v * 5) + .45 * Math.sin(sec * 2.6 + v * 13))) * dpr;
@@ -1012,7 +1020,7 @@ function treeArt() {
     ctx.restore();
 
     // falling leaves
-    if (!reduce && intro >= 1) {
+    if (withLeaves && !reduce && intro >= 1) {
       const now = performance.now();
       if (!leaves.length) leaves = Array.from({ length: 6 }, () => spawnLeaf(now, true));
       ctx.fillStyle = '#2E8B3A';
@@ -1037,11 +1045,11 @@ function treeArt() {
     draw((now - t0) / 1000);
     requestAnimationFrame(frame);
   }
-  treeKick = () => { if (!reduce && !running) { running = true; requestAnimationFrame(frame); } };
-  img.onload = () => { fit(); treeKick(); };
+  const kick = () => { if (!reduce && !running) { running = true; requestAnimationFrame(frame); } };
+  img.onload = () => { fit(); kick(); };
   new ResizeObserver(fit).observe(treeEl);
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (reduce) draw(9); });
-  return treeEl;
+  return [treeEl, kick];
 }
 
 /* ---------- sign-in ---------- */
@@ -1128,6 +1136,7 @@ async function enter(session) {
 
 /* ---------- boot ---------- */
 $('#brandBtn').onclick = () => go('home');
+brandArt();
 $('#dashBtn').onclick = () => go('dashboard');
 $('#mOut').onclick = async () => { $('#menu').open = false; channel?.unsubscribe(); await sb.auth.signOut(); };
 $('#mPass').onclick = () => { $('#menu').open = false; $('#p-new').value = ''; $('#p-again').value = ''; $('#passErr').textContent = ''; $('#passDlg').showModal(); };
