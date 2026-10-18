@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>בא״ח גולני · אגף ההדרכה</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1E4A2D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="בא״ח גולני">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Secular+One&display=swap">
+<style>
+/* Layout: one 1000px column. Home = hero + 2-col illustrated tiles (from the mockup);
+   window page = status strip + sections; dashboard = summary first, then dense rows. */
+:root {
+  --bg: #F6F5EF;
+  --surface: #FFFFFF;
+  --surface-2: #ECEFE5;
+  --ink: #18261C;
+  --ink-2: #56635A;
+  --line: #DCE1D4;
+  --brand: #1E4A2D;
+  --on-brand: #FFFFFF;
+  --chip: #E3E8DC;
+  --ok: #24764A;   --ok-bg: #E1F0E5;
+  --warn: #9A6212; --warn-bg: #F7ECD6;
+  --bad: #A8352A;  --bad-bg: #F6E0DC;
+  --none: #6B736C; --none-bg: #ECEDE8;
+  --on-art: #173A24;
+  --art-chip: rgba(255,255,255,.72);
+  --shadow: 0 1px 2px rgba(24,38,28,.06), 0 6px 18px rgba(24,38,28,.06);
+  --f-display: "Secular One", "Assistant", "Segoe UI", Arial, sans-serif;
+  --f-body: "Assistant", "Segoe UI", Arial, sans-serif;
+  --r: 18px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101611; --surface: #18201A; --surface-2: #1F2921; --ink: #E4EBE3; --ink-2: #9DAA9F;
+    --line: #2C372E; --brand: #9CCBA6; --on-brand: #0F1A12; --chip: #253027;
+    --ok: #7FD39C; --ok-bg: #1C3324; --warn: #E9B865; --warn-bg: #3A2D16;
+    --bad: #F09486; --bad-bg: #3D1F1B; --none: #A5ADA6; --none-bg: #262D27;
+    --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
+  }
+  .brand img { filter: brightness(2.6) saturate(.6); }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.5;
+  padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--brand); }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+
+.wrap { max-width: 1000px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.top .acts { display: flex; align-items: center; gap: 8px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; text-align: right; }
+.brand img { width: 46px; height: 53px; }
+.brand b { display: block; font-family: var(--f-display); font-size: 1.45rem; line-height: 1; color: var(--brand); font-weight: 400; }
+.brand span { font-size: .95rem; color: var(--ink-2); }
+.pill-btn { border: 0; background: var(--chip); color: var(--ink); border-radius: 999px; padding: 8px 16px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.pill-btn:hover { background: var(--line); }
+.menu { position: relative; }
+.menu summary { list-style: none; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: var(--on-brand); display: grid; place-items: center; font-weight: 800; }
+.menu summary::-webkit-details-marker { display: none; }
+.menu .pop { position: absolute; left: 0; top: 46px; z-index: 5; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.15); min-width: 220px; padding: 6px; }
+.menu .who { padding: 8px 10px 10px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.menu .who b { display: block; }
+.menu .who small { color: var(--ink-2); }
+.menu .pop button { display: block; width: 100%; text-align: right; border: 0; background: none; padding: 9px 10px; border-radius: 8px; cursor: pointer; }
+.menu .pop button:hover { background: var(--surface-2); }
+
+/* login */
+.gate { min-height: calc(100dvh - 40px); display: grid; place-items: center; padding-block: 24px; }
+.gate-card { width: min(420px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 28px 24px; box-shadow: var(--shadow); display: grid; gap: 16px; }
+.gate-card .logo { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.gate-card .logo img { width: 62px; height: 72px; }
+.gate-card .logo b { font-family: var(--f-display); font-weight: 400; font-size: 1.9rem; line-height: 1; color: var(--brand); }
+.gate-card .logo span { color: var(--ink-2); }
+.tabs { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border-radius: 12px; padding: 4px; gap: 4px; }
+.tabs button { border: 0; background: none; border-radius: 9px; padding: 8px; font-weight: 700; cursor: pointer; color: var(--ink-2); }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.gate-card form { display: grid; gap: 12px; }
+.gate-card .hint { color: var(--ink-2); font-size: .92rem; text-align: center; }
+.linkish { border: 0; background: none; color: var(--brand); font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline; }
+.code-input { text-align: center; letter-spacing: .3em; font-size: 1.3rem !important; font-weight: 700; }
+
+/* home */
+.hello h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(2.2rem, 7vw, 3.6rem); line-height: 1.05; }
+.hello p { margin: 4px 0 0; color: var(--ink-2); font-size: 1.15rem; }
+.search { position: relative; margin: 20px 0 22px; }
+.search input { width: 100%; border: 1px solid transparent; background: var(--surface-2); border-radius: 16px; padding: 15px 20px 15px 52px; font-size: 1.05rem; }
+.search input:focus { outline: none; border-color: var(--brand); background: var(--surface); }
+.search svg { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--ink-2); pointer-events: none; }
+
+.hero { position: relative; display: block; width: 100%; border: 0; padding: 0; cursor: pointer; text-align: right;
+  border-radius: var(--r); overflow: hidden; aspect-ratio: 933 / 258; max-width: 100%;
+  background: #CFDCC4 url(art/hero.jpg) left center / cover no-repeat; color: var(--on-art); }
+.hero .txt { position: absolute; inset-block: 0; right: 0; width: 48%; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 0 34px; }
+.hero h2 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.7rem, 4.6vw, 2.7rem); line-height: 1.1; }
+.hero p { margin: 0; font-size: 1.15rem; color: #3F5545; }
+.hero .meta { margin-top: 10px; display: flex; align-items: center; gap: 10px; }
+
+.arrow { width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--art-chip); display: grid; place-items: center; color: var(--on-art); }
+.art-chip { background: var(--art-chip); color: var(--on-art); border-radius: 999px; padding: 3px 12px; font-size: .85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+
+.row-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 30px 0 14px; }
+.row-head h2 { font-family: var(--f-display); font-weight: 400; font-size: 1.7rem; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { border: 0; background: var(--chip); color: var(--ink); border-radius: 999px; padding: 7px 18px; cursor: pointer; font-weight: 600; }
+.chip[aria-pressed="true"] { background: var(--brand); color: var(--on-brand); }
+
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+.tile { position: relative; border: 0; padding: 0; cursor: pointer; border-radius: var(--r); overflow: hidden;
+  aspect-ratio: 455 / 221; max-width: 100%; background-size: cover; background-position: center; color: var(--on-art); text-align: left;
+  transition: transform .18s ease, box-shadow .18s ease; }
+.tile:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(24,38,28,.18); }
+.tile h3 { position: absolute; top: 15%; left: 7%; font-family: var(--f-display); font-weight: 400; font-size: clamp(1.35rem, 3.4vw, 2rem); line-height: 1.1; max-width: 55%; text-align: left; }
+.tile .foot { position: absolute; left: 7%; bottom: 23%; display: flex; align-items: center; gap: 8px; flex-direction: row-reverse; }
+.tile .arrow { width: 42px; height: 42px; }
+
+.dash-card { margin-top: 16px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; width: 100%; text-align: right;
+  border: 1px solid var(--line); background: var(--surface); border-radius: var(--r); padding: 18px 22px; cursor: pointer; box-shadow: var(--shadow); }
+.dash-card:hover { border-color: var(--brand); }
+.dash-card .ico { width: 52px; height: 52px; border-radius: 14px; background: var(--brand); color: var(--on-brand); display: grid; place-items: center; }
+.dash-card h3 { font-family: var(--f-display); font-weight: 400; font-size: 1.4rem; }
+.dash-card p { margin: 0; color: var(--ink-2); }
+.dash-card .counts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+.foot-note { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--line); text-align: center; color: var(--ink-2); font-size: .92rem; }
+
+/* status pills */
+.st { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 2px 11px; font-size: .85rem; font-weight: 700; white-space: nowrap; }
+.st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.st.ok, .st.done { color: var(--ok); background: var(--ok-bg); }
+.st.watch, .st.progress { color: var(--warn); background: var(--warn-bg); }
+.st.alert, .st.late { color: var(--bad); background: var(--bad-bg); }
+.st.none, .st.open { color: var(--none); background: var(--none-bg); }
+
+/* search results */
+.results h2 { font-size: 1.05rem; color: var(--ink-2); margin: 18px 0 8px; font-weight: 700; }
+.res { display: block; width: 100%; text-align: right; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer; }
+.res:hover { border-color: var(--brand); }
+.res b { display: block; }
+.res small { color: var(--ink-2); }
+.empty { color: var(--ink-2); padding: 14px 0; }
+
+/* window page */
+.back { border: 0; background: none; color: var(--ink-2); cursor: pointer; padding: 6px 0; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.back:hover { color: var(--ink); }
+.w-head { margin: 8px 0 16px; }
+.eyebrow { color: var(--ink-2); font-weight: 600; font-size: .95rem; letter-spacing: .01em; }
+.w-head h1, .d-title h1 { font-family: var(--f-display); font-weight: 400; font-size: clamp(2rem, 6vw, 2.9rem); line-height: 1.1; }
+.d-title p { margin: 2px 0 0; color: var(--ink-2); }
+.w-banner { height: 120px; border-radius: var(--r); background-size: cover; background-position: right center; margin-bottom: 18px; }
+
+.status { display: grid; grid-template-columns: 1.1fr 1.3fr 1.3fr .8fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.status > div { background: var(--surface); padding: 14px 16px; min-width: 0; }
+.status h4 { margin: 0 0 6px; font-size: .8rem; color: var(--ink-2); font-weight: 700; letter-spacing: .03em; }
+.status ul { margin: 0; padding: 0 18px 0 0; }
+.status li { margin-bottom: 2px; }
+.status .note { margin-top: 6px; white-space: pre-line; }
+.muted { color: var(--ink-2); }
+.status .date { font-variant-numeric: tabular-nums; font-weight: 700; font-size: 1.15rem; }
+
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 22px 0 6px; }
+.toolbar .l { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+select.sel { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 7px 10px; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 8px 14px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.btn:hover { border-color: var(--ink-2); }
+.btn.primary { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+.btn.primary:hover { filter: brightness(1.1); }
+.btn.danger { color: var(--bad); }
+.btn.small { padding: 4px 10px; font-size: .9rem; }
+.btn.wide { width: 100%; padding: 11px; font-size: 1.05rem; }
+.btn[disabled] { opacity: .6; cursor: progress; }
+
+.links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.section { margin-top: 26px; }
+.section-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; border-bottom: 2px solid var(--brand); padding-bottom: 6px; margin-bottom: 10px; }
+.section-h h2 { font-size: 1.3rem; font-weight: 800; }
+.section-h .n { color: var(--ink-2); font-variant-numeric: tabular-nums; font-weight: 600; margin-inline-start: 8px; font-size: .95rem; }
+.add { border: 0; background: none; color: var(--brand); font-weight: 700; cursor: pointer; padding: 2px 4px; white-space: nowrap; }
+.items { display: grid; gap: 8px; }
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; min-width: 0; }
+.item.flash { animation: flash 1.6s ease; }
+@keyframes flash { 0%,40% { border-color: var(--brand); box-shadow: 0 0 0 3px var(--chip); } 100% { } }
+.item-top { display: flex; align-items: flex-start; gap: 10px; justify-content: space-between; }
+.item-top .t { font-weight: 700; font-size: 1.05rem; overflow-wrap: anywhere; }
+.item-top .r { display: flex; gap: 6px; align-items: center; flex: none; }
+.item .body { margin: 4px 0 0; white-space: pre-line; overflow-wrap: anywhere; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; color: var(--ink-2); font-size: .9rem; }
+.meta .late { color: var(--bad); font-weight: 700; }
+.file-link { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; }
+.icon-btn { border: 0; background: none; color: var(--ink-2); cursor: pointer; padding: 4px; border-radius: 6px; }
+.icon-btn:hover { color: var(--ink); background: var(--surface-2); }
+.none-yet { color: var(--ink-2); font-size: .95rem; padding: 6px 0 2px; }
+
+/* dashboard */
+.summary { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; min-width: 0; }
+.stat h4 { margin: 0 0 6px; font-size: .82rem; color: var(--ink-2); font-weight: 700; }
+.stat .big { font-family: var(--f-display); font-size: 2.1rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .big.bad { color: var(--bad); }
+.bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--none-bg); margin: 6px 0 8px; }
+.bar i { display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .85rem; color: var(--ink-2); }
+.legend b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 22px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; min-width: 0; }
+.panel h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; }
+.plist { margin: 0; padding: 0; list-style: none; }
+.plist li { padding: 7px 0; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.plist li:first-child { border-top: 0; }
+.plist .src { color: var(--ink-2); font-size: .88rem; white-space: nowrap; }
+.plist .go { border: 0; background: none; padding: 0; text-align: right; cursor: pointer; color: inherit; }
+.plist .go:hover { color: var(--brand); text-decoration: underline; }
+
+.table { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--line); display: grid; gap: 1px; }
+.tr { display: grid; grid-template-columns: 1.3fr 1fr 1.6fr .6fr .6fr; gap: 14px; align-items: center; background: var(--surface); padding: 12px 16px; text-align: right; border: 0; width: 100%; cursor: pointer; }
+.tr:hover { background: var(--surface-2); }
+.tr.th { cursor: default; background: var(--brand); color: var(--on-brand); font-weight: 700; font-size: .9rem; }
+.tr .nm { font-weight: 800; }
+.tr .gl { color: var(--ink-2); font-size: .9rem; }
+.tr .gaps { font-size: .92rem; overflow-wrap: anywhere; }
+.tr .num { font-variant-numeric: tabular-nums; font-weight: 700; }
+.lbl { display: none; color: var(--ink-2); font-size: .8rem; font-weight: 600; }
+
+/* admin */
+.admin-grid { display: grid; gap: 16px; margin-top: 18px; }
+.panel form { display: grid; gap: 10px; }
+.erow { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 0; border-top: 1px solid var(--line); }
+.erow:first-of-type { border-top: 0; }
+.erow .acts { display: flex; gap: 6px; flex-wrap: wrap; }
+.okbox { background: var(--ok-bg); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; }
+.okbox pre { margin: 0; white-space: pre-wrap; font-family: var(--f-body); }
+
+/* forms + dialogs */
+dialog { border: 0; border-radius: 18px; padding: 0; width: min(560px, calc(100vw - 32px)); background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+dialog::backdrop { background: rgba(10,20,12,.45); }
+dialog form { padding: 20px 22px; display: grid; gap: 12px; max-height: 85vh; overflow: auto; }
+dialog h2 { font-size: 1.3rem; font-weight: 800; }
+.f { display: grid; gap: 4px; min-width: 0; }
+.f label { font-weight: 700; font-size: .9rem; }
+.f input, .f select, .f textarea { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 10px; padding: 10px 11px; font-size: 1rem; }
+.f textarea { min-height: 84px; resize: vertical; }
+.f small { color: var(--ink-2); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.actions { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; margin-top: 4px; }
+.actions .l { display: flex; gap: 8px; }
+.err { color: var(--bad); font-weight: 600; min-height: 1.2em; }
+.cur-file { display: flex; gap: 10px; align-items: center; font-size: .92rem; }
+
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 12px; font-weight: 600; z-index: 10; max-width: calc(100vw - 32px); }
+.loading { padding: 80px 0; text-align: center; color: var(--ink-2); }
+
+@media (max-width: 760px) {
+  .status { grid-template-columns: 1fr 1fr; }
+  .summary { grid-template-columns: 1fr 1fr; }
+  .summary .stat:first-child { grid-column: 1 / -1; }
+  .two { grid-template-columns: 1fr; }
+  .tr { grid-template-columns: 1fr auto; gap: 6px 12px; }
+  .tr.th { display: none; }
+  .tr .gl, .tr .gaps { grid-column: 1 / -1; }
+  .tr .c-dec, .tr .c-upd { display: flex; gap: 6px; align-items: baseline; }
+  .lbl { display: inline; }
+  .dash-card { grid-template-columns: auto 1fr; }
+  .dash-card .counts { grid-column: 1 / -1; justify-content: flex-start; }
+}
+@media (max-width: 600px) {
+  .tiles { grid-template-columns: 1fr; }
+  .hero { aspect-ratio: auto; min-height: 210px; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to left, rgba(207,220,196,.95) 30%, rgba(207,220,196,.55) 65%, rgba(207,220,196,0)); }
+  .hero .txt { width: 72%; padding: 0 20px; z-index: 1; }
+  .grid2 { grid-template-columns: 1fr; }
+  .status { grid-template-columns: 1fr; }
+  .top .pill-btn { padding: 8px 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .tile, .item.flash { transition: none; animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <header class="top" id="top" hidden>
+    <button class="brand" id="brandBtn" type="button" aria-label="לדף הבית">
+      <img src="art/tree.png" alt="">
+      <div><b>בא״ח גולני</b><span>אגף ההדרכה</span></div>
+    </button>
+    <div class="acts">
+      <button class="pill-btn" id="dashBtn" type="button">לוח בקרה מג״ד</button>
+      <details class="menu" id="menu">
+        <summary aria-label="חשבון" id="menuBtn"></summary>
+        <div class="pop">
+          <div class="who"><b id="menuName"></b><small id="menuRole"></small></div>
+          <button type="button" id="mPass" hidden>החלפת סיסמה</button>
+          <button type="button" id="mAdmin" hidden>ניהול עורכים וקוד יחידה</button>
+          <button type="button" id="mOut">יציאה</button>
+        </div>
+      </details>
+    </div>
+  </header>
+  <main id="view"><p class="loading">טוען…</p></main>
+  <footer class="foot-note" id="foot" hidden>בא״ח גולני · אגף ההדרכה · כל הכלים של הבא״ח, במקום אחד</footer>
+
+  <dialog id="itemDlg">
+    <form id="itemForm" novalidate>
+      <h2 id="itemDlgTitle">הוספת תוכן</h2>
+      <div class="f"><label for="f-section">חלק בחלונית</label><select id="f-section"></select></div>
+      <div class="f"><label for="f-title">כותרת</label><input id="f-title" required maxlength="200" placeholder="לדוגמה: גאנט שבועי – שבוע 3"></div>
+      <div class="f"><label for="f-body">פירוט</label><textarea id="f-body" maxlength="4000"></textarea></div>
+      <div class="f"><label for="f-link">קישור</label><input id="f-link" type="url" dir="ltr" placeholder="https://"><small>קישור לדרייב, שרפוינט או כל מסמך אחר</small></div>
+      <div class="f"><label for="f-file">קובץ מצורף</label>
+        <div class="cur-file" id="curFile" hidden></div>
+        <input id="f-file" type="file">
+        <small>כל סוג קובץ (PDF, Word, PowerPoint, Excel, תמונה), עד 50MB.</small></div>
+      <div class="grid2">
+        <div class="f"><label for="f-cycle">מחזור</label><input id="f-cycle" list="cycles" maxlength="40" placeholder="לדוגמה: נובמבר 26"><datalist id="cycles"></datalist></div>
+        <div class="f"><label for="f-owner">אחראי</label><input id="f-owner" maxlength="60"></div>
+        <div class="f"><label for="f-due">תאריך יעד</label><input id="f-due" type="date"></div>
+        <div class="f"><label for="f-status">סטטוס</label><select id="f-status">
+          <option value="">ללא</option><option value="open">פתוח</option><option value="progress">בטיפול</option><option value="done">בוצע</option></select></div>
+      </div>
+      <div class="err" id="itemErr" role="alert"></div>
+      <div class="actions">
+        <div class="l"><button class="btn primary" id="itemSave" type="submit">שמירה</button><button class="btn" type="button" data-close>ביטול</button></div>
+        <button class="btn danger" id="itemDel" type="button">מחיקה</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="metaDlg">
+    <form id="metaForm" novalidate>
+      <h2 id="metaDlgTitle">עדכון מצב</h2>
+      <div class="f"><label for="m-status">מצב עדכני</label><select id="m-status">
+        <option value="ok">תקין</option><option value="watch">דורש מעקב</option><option value="alert">חריג</option><option value="">לא עודכן</option></select></div>
+      <div class="f"><label for="m-note">תמונת מצב בקצרה</label><textarea id="m-note" maxlength="1000"></textarea></div>
+      <div class="f"><label for="m-gaps">פערים מרכזיים</label><textarea id="m-gaps" maxlength="2000"></textarea><small>פער אחד בכל שורה</small></div>
+      <div class="f"><label for="m-dec">נושאים להחלטת מג״ד</label><textarea id="m-dec" maxlength="2000"></textarea><small>נושא אחד בכל שורה</small></div>
+      <div class="err" id="metaErr" role="alert"></div>
+      <div class="actions"><div class="l"><button class="btn primary" id="metaSave" type="submit">שמירה</button><button class="btn" type="button" data-close>ביטול</button></div></div>
+    </form>
+  </dialog>
+
+  <dialog id="passDlg">
+    <form id="passForm" novalidate>
+      <h2>החלפת סיסמה</h2>
+      <div class="f"><label for="p-new">סיסמה חדשה</label><input id="p-new" type="password" autocomplete="new-password" minlength="8"><small>לפחות 8 תווים</small></div>
+      <div class="f"><label for="p-again">שוב, לאימות</label><input id="p-again" type="password" autocomplete="new-password"></div>
+      <div class="err" id="passErr" role="alert"></div>
+      <div class="actions"><div class="l"><button class="btn primary" id="passSave" type="submit">שמירה</button><button class="btn" type="button" data-close>ביטול</button></div></div>
+    </form>
+  </dialog>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL = 'https://oxrrjfieovrqwdebtodj.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cnJqZmllb3ZycXdkZWJ0b2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzNTA3MzQsImV4cCI6MjEwNzkyNjczNH0.0JNm-gCcUO1tQvJCahTbKx4b0B73WKPC5EqkqimA290';
+const VIEWER_EMAIL = 'unit-viewer@golani-bach.app';
+const sb = supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'golani-bach-auth' } });
+
+/* ---------- configuration: the windows and their sections ---------- */
+const WINDOWS = [
+  { id: 'gantt', name: 'גרף וגאנט הבא״ח', cat: 'הדרכה', art: 'hero',
+    tag: 'תכנון ההכשרה מתחיל כאן', goal: 'ריכוז תכנון ההכשרה והאירועים',
+    sections: [['graphs','גרפי הכשרה לפי מחזור'],['gantt','גאנט שנתי ושבועי'],['trainings','מועדי אימונים והשתלמויות'],['events','אירועים מרכזיים'],['changes','שינויים אחרונים']] },
+  { id: 'commander', name: 'חלון מפקד הבא״ח', cat: 'פיקוד', art: 'commander',
+    goal: 'תפיסת הפיקוד, יעדים ודגשים למחזור',
+    sections: [['word','דבר המפקד ותפיסת הפיקוד'],['goals','יעדים ודגשים למחזור'],['guidance','הנחיות וסיכומי מפקד']],
+    links: [['dashboard','ללוח הבקרה של המג״ד'],['norms','נורמות וסטנדרטים']] },
+  { id: 'foundation', name: 'תיקי יסוד', cat: 'הדרכה', art: 'foundation',
+    goal: 'תיקי היסוד העדכניים לכל מקצוע',
+    sections: [['files','תיקי יסוד לפי מקצוע'],['goals','מטרות והישגים נדרשים'],['sequence','רצף ההכשרה'],['lessons','מערכי שיעור'],['aids','חומרי עזר ומבחנים']] },
+  { id: 'education', name: 'חינוך', dashName: 'חינוך ומורשת גולני', cat: 'חינוך', art: 'education',
+    goal: 'ערכים ומורשת בהכשרה',
+    sections: [['plan','תוכנית החינוך המחזורית'],['heritage','מורשת גולני'],['talks','מערכי שיחה למפקדים'],['activities','פעילויות ערכיות'],['memorial','ימי זיכרון ומועדים'],['tours','הכנה לסיורים']] },
+  { id: 'range', name: 'תיקי מטווח', cat: 'הדרכה', art: 'range',
+    goal: 'תיקי מטווח מאושרים ובטיחות באימונים',
+    sections: [['approved','תיקי מטווח מאושרים לפי סוג אימון'],['safety','מסמכי חובה והנחיות בטיחות'],['forms','טופסי אישור ובקרה']] },
+  { id: 'devtraining', name: 'פיתוח הדרכה', cat: 'הדרכה', art: 'devtraining',
+    goal: 'כלים ותבניות לבניית הדרכה',
+    sections: [['objectives','כלים לכתיבת מטרות והישגים'],['templates','תבניות למערכי שיעור ולמצגות'],['methods','שיטות למידה'],['tests','בניית מבחנים ומשובים'],['observe','טופסי תצפית וחניכה']] },
+  { id: 'cmdprep', name: 'הכנת מפקדים', cat: 'פיקוד', art: 'cmdprep',
+    goal: 'היערכות לפתיחת מחזור',
+    sections: [['plans','תוכניות הכנה לפי מחזור ותפקיד'],['schedule','לו״ז יומי'],['goals','מטרות ותוצרים'],['materials','חומרי הכנה וסדנאות'],['duties','חלוקת אחריות'],['tracking','מעקב השתתפות וסיכומים']] },
+  { id: 'readiness', name: 'תמונת מצב הכשרות', cat: 'הדרכה', goal: 'מעקב התקדמות הפלוגות',
+    sections: [['week','שבוע בהכשרה'],['plan','תכנון מול ביצוע'],['achieve','הישגים נדרשים'],['gaps','פערים והשלמות']] },
+  { id: 'qualification', name: 'כשירות מפקדים', cat: 'פיקוד', goal: 'מעקב כשירות לפי תפקיד',
+    sections: [['req','דרישות כשירות'],['training','אימוני מפקדים'],['courses','השתלמויות'],['certs','הסמכות ותוקפן'],['completion','תוכנית השלמות']] },
+  { id: 'feedback', name: 'חניכה ומשוב', cat: 'פיקוד', goal: 'שיפור הפיקוד וההדרכה',
+    sections: [['plan','תוכנית חניכה'],['observe','תצפיות'],['forms','טופסי משוב'],['points','נקודות לשימור ולשיפור'],['progress','מעקב התקדמות']] },
+  { id: 'lessons', name: 'לקחים ותובנות', cat: 'הדרכה', goal: 'הטמעת שיפור בהכשרה',
+    sections: [['debriefs','תחקירים'],['recurring','לקחים חוזרים'],['recs','המלצות'],['actions','פעולות להטמעה']] },
+  { id: 'norms', name: 'נורמות וסטנדרטים', cat: 'פיקוד', goal: 'אחידות וציפיות ברורות',
+    sections: [['focus','דגשי מג״ד'],['procedures','נהלים'],['routines','שגרות מחייבות'],['standards','סטנדרטים לשיעורים ולמסדרים'],['discipline','משמעת ודוגמה אישית']] },
+  { id: 'decisions', name: 'מעקב החלטות ומשימות', cat: 'פיקוד', goal: 'ביצוע החלטות וסגירת משימות',
+    sections: [['decisions','החלטות מישיבות וביקורות'],['tasks','משימות'],['forcdr','נושאים להחלטת מג״ד']] },
+  { id: 'safety', name: 'בטיחות בהכשרה', cat: 'הדרכה', goal: 'מעקב הנחיות ופערי בטיחות',
+    sections: [['guidance','הנחיות עדכניות'],['events','לקחים מאירועים ומכמעט-ונפגע'],['briefings','תדריכים'],['checks','בקרות'],['gaps','פערים ומעקב סגירה']] },
+];
+const DASH_ORDER = ['gantt','readiness','qualification','cmdprep','feedback','lessons','norms','education','decisions','safety'];
+const TILE_ORDER = ['commander','foundation','education','range','devtraining','cmdprep'];
+const W = Object.fromEntries(WINDOWS.map(w => [w.id, w]));
+const ST = { ok: 'תקין', watch: 'דורש מעקב', alert: 'חריג', '': 'לא עודכן' };
+const IST = { open: 'פתוח', progress: 'בטיפול', done: 'בוצע' };
+const ROLE = { viewer: 'צפייה (קוד יחידה)', editor: 'עורך', admin: 'מנהל האתר' };
+
+/* ---------- state ---------- */
+const S = {
+  session: null, role: null, uid: null, canEdit: false,
+  meta: {}, items: [], members: [], urls: {}, loadedAt: 0,
+  route: 'home', from: 'home', q: '', cat: 'הכל', cycle: '', flashId: null, viewKey: null,
+};
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+function h(tag, props, ...kids) {
+  const el = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'text') el.textContent = v;
+    else if (k === 'style') el.style.cssText = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const k of kids.flat(9)) { if (k == null || k === false) continue; el.append(k.nodeType ? k : document.createTextNode(String(k))); }
+  return el;
+}
+const svg = (path, size = 18) => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('width', size); s.setAttribute('height', size); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('fill', 'none');
+  s.setAttribute('stroke', 'currentColor'); s.setAttribute('stroke-width', '2'); s.setAttribute('stroke-linecap', 'round'); s.setAttribute('stroke-linejoin', 'round');
+  s.innerHTML = path; return s; };
+const I = {
+  fwd: () => svg('<path d="M15 6l-6 6 6 6"/>', 20),
+  back: () => svg('<path d="M9 6l6 6-6 6"/>', 18),
+  edit: () => svg('<path d="M4 20h4L19 9l-4-4L4 16v4z"/>', 16),
+  clip: () => svg('<path d="M21 11l-8.5 8.5a5 5 0 01-7-7L14 4a3.5 3.5 0 015 5l-8.5 8.5a2 2 0 01-3-3L15 7"/>', 15),
+  link: () => svg('<path d="M10 14a4 4 0 006 0l3-3a4 4 0 00-6-6l-1 1"/><path d="M14 10a4 4 0 00-6 0l-3 3a4 4 0 006 6l1-1"/>', 15),
+  dash: () => svg('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>', 26),
+  search: () => svg('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>', 22),
+};
+const pad = n => String(n).padStart(2, '0');
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+function fmtDate(v) {
+  if (!v) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) { const [y, m, d] = v.split('-'); return `${d}.${m}.${y.slice(2)}`; }
+  const d = new Date(v); if (isNaN(d)) return '';
+  return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${String(d.getFullYear()).slice(2)}`;
+}
+const isLate = it => it.due && it.status !== 'done' && it.due < todayStr();
+const lines = s => String(s || '').split('\n').map(x => x.trim()).filter(Boolean);
+const norm = s => String(s || '').toLowerCase().replace(/["״'׳\-–]/g, '').replace(/\s+/g, ' ');
+const safeUrl = u => /^https?:\/\//i.test(String(u || '').trim()) ? String(u).trim() : null;
+const itemsOf = id => S.items.filter(i => i.w === id);
+const memberName = id => { const m = S.members.find(x => x.user_id === id); return m ? (m.display_name || m.email) : ''; };
+function lastUpdate(id) {
+  let best = S.meta[id]?.updated_at || '', by = S.meta[id]?.updated_by || null;
+  for (const it of itemsOf(id)) if ((it.updated_at || '') > best) { best = it.updated_at; by = it.updated_by || null; }
+  return { at: best, by };
+}
+function stPill(code) { const c = code || ''; return h('span', { class: 'st ' + (c || 'none'), text: ST[c] }); }
+function itemPill(it) {
+  if (isLate(it)) return h('span', { class: 'st late', text: 'באיחור' });
+  if (!it.status) return null;
+  return h('span', { class: 'st ' + it.status, text: IST[it.status] });
+}
+const byName = id => { const n = memberName(id); return n ? ' · ' + n : ''; };
+let toastT;
+function toast(msg) {
+  document.querySelector('.toast')?.remove(); clearTimeout(toastT);
+  const t = h('div', { class: 'toast', role: 'status', text: msg }); document.body.append(t);
+  toastT = setTimeout(() => t.remove(), 3200);
+}
+function writeFailed(e) {
+  console.error(e);
+  if (e?.code === '42501' || /row-level security|permission/i.test(e?.message || '')) return 'אין לך הרשאת עריכה. פנו למנהל האתר.';
+  if (/JWT|expired|session/i.test(e?.message || '')) return 'פג תוקף החיבור. התחברו מחדש.';
+  return 'השמירה לא הצליחה. בדקו את החיבור ונסו שוב.';
+}
+async function callAdmin(action, payload = {}) {
+  const { data: { session } } = await sb.auth.getSession();
+  const res = await fetch(SB_URL + '/functions/v1/admin', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', apikey: SB_KEY, Authorization: 'Bearer ' + (session?.access_token || SB_KEY) },
+    body: JSON.stringify({ action, ...payload }),
+  });
+  let out = {}; try { out = await res.json(); } catch {}
+  if (!res.ok) throw new Error(out.error || 'הפעולה נכשלה. נסו שוב.');
+  return out;
+}
+
+/* ---------- data ---------- */
+async function loadData() {
+  const [m, it, mem] = await Promise.all([
+    sb.from('window_meta').select('*'),
+    sb.from('items').select('*'),
+    sb.from('members').select('user_id, role, email, display_name'),
+  ]);
+  if (m.error || it.error) { console.error(m.error || it.error); toast('טעינת הנתונים נכשלה. רעננו את הדף.'); return; }
+  S.meta = Object.fromEntries((m.data || []).map(r => [r.id, r]));
+  S.items = it.data || [];
+  S.members = mem.data || [];
+  const paths = S.items.map(i => i.file_path).filter(Boolean);
+  S.urls = {};
+  if (paths.length) {
+    const { data } = await sb.storage.from('files').createSignedUrls(paths, 6 * 3600);
+    for (const r of data || []) if (r.signedUrl) S.urls[r.path] = r.signedUrl;
+  }
+  S.loadedAt = Date.now();
+  rerender();
+}
+let reloadT;
+const scheduleReload = () => { clearTimeout(reloadT); reloadT = setTimeout(loadData, 400); };
+let channel = null;
+function subscribe() {
+  channel?.unsubscribe();
+  channel = sb.channel('changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, scheduleReload)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'window_meta' }, scheduleReload)
+    .subscribe();
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && S.role && Date.now() - S.loadedAt > 60 * 1000) loadData();
+});
+
+/* ---------- routing ---------- */
+function go(route, opts = {}) {
+  if (route.startsWith('w-') && !S.route.startsWith('w-')) S.from = S.route;
+  if (route === 'home' || route === 'dashboard' || route === 'admin') S.from = 'home';
+  S.cycle = ''; S.flashId = opts.flash || null;
+  if (location.hash.slice(1) !== route) history.pushState(null, '', '#' + route);
+  S.route = route; S.viewKey = null; $('#menu').open = false;
+  render(); window.scrollTo(0, 0);
+  if (opts.flash) requestAnimationFrame(() => document.getElementById('i-' + opts.flash)?.scrollIntoView({ block: 'center' }));
+}
+function readHash() {
+  const r = location.hash.slice(1);
+  S.route = (r === 'dashboard' || r === 'admin' || (r.startsWith('w-') && W[r.slice(2)])) ? r : 'home';
+}
+window.addEventListener('popstate', () => { readHash(); S.viewKey = null; render(); });
+
+/* ---------- views ---------- */
+function render() {
+  if (!S.role) return;
+  if (S.route === 'home') return renderHome();
+  if (S.route === 'dashboard') return renderDash();
+  if (S.route === 'admin') return S.role === 'admin' ? renderAdmin() : go('home');
+  return renderWindow(W[S.route.slice(2)]);
+}
+function rerender() { if (S.route === 'home' && S.viewKey === 'home') renderHomeBody(); else if (S.route !== 'admin') render(); }
+
+function renderHome() {
+  const view = $('#view');
+  if (S.viewKey !== 'home') {
+    S.viewKey = 'home';
+    const input = h('input', { id: 'q', type: 'search', placeholder: 'חיפוש כלי, תיק או הכשרה – לפי שם, נושא או מחזור', 'aria-label': 'חיפוש', value: S.q,
+      oninput: e => { S.q = e.target.value; renderHomeBody(); } });
+    view.replaceChildren(
+      h('section', { class: 'hello' }, h('h1', { text: 'מה נפתח היום?' }), h('p', { text: 'כל הכלים של הבא״ח, במקום אחד' })),
+      h('div', { class: 'search' }, input, I.search()),
+      h('div', { id: 'homeBody' }));
+  }
+  renderHomeBody();
+}
+function updChip(id) { const u = lastUpdate(id); return u.at ? h('span', { class: 'art-chip' }, 'עודכן ' + fmtDate(u.at)) : null; }
+
+function renderHomeBody() {
+  const body = $('#homeBody'); if (!body) return;
+  const q = norm(S.q.trim());
+  if (q) return body.replaceChildren(renderResults(q));
+  const g = W.gantt;
+  const hero = h('button', { class: 'hero', type: 'button', onclick: () => go('w-gantt') },
+    h('div', { class: 'txt' }, h('h2', { text: g.name }), h('p', { text: g.tag }),
+      h('div', { class: 'meta' }, h('span', { class: 'arrow' }, I.fwd()), updChip('gantt'))));
+  const chips = h('div', { class: 'chips', role: 'group', 'aria-label': 'סינון לפי תחום' },
+    ['הכל', 'הדרכה', 'פיקוד', 'חינוך'].map(c => h('button', { class: 'chip', type: 'button', 'aria-pressed': String(S.cat === c), text: c,
+      onclick: () => { S.cat = c; renderHomeBody(); } })));
+  const shown = TILE_ORDER.map(id => W[id]).filter(w => S.cat === 'הכל' || w.cat === S.cat);
+  const tiles = h('div', { class: 'tiles' }, shown.map(w =>
+    h('button', { class: 'tile', type: 'button', style: `background-image:url(art/${w.art}.jpg)`, onclick: () => go('w-' + w.id) },
+      h('h3', { text: w.name }),
+      h('div', { class: 'foot' }, h('span', { class: 'arrow' }, I.fwd()), updChip(w.id)))));
+  if (!shown.length) tiles.append(h('p', { class: 'empty', text: 'אין חלוניות בתחום הזה.' }));
+  const dm = DASH_ORDER.map(id => S.meta[id]?.status || '');
+  const n = c => dm.filter(x => x === c).length;
+  const dash = h('button', { class: 'dash-card', type: 'button', onclick: () => go('dashboard') },
+    h('span', { class: 'ico' }, I.dash()),
+    h('div', {}, h('h3', { text: 'לוח בקרה מג״ד' }), h('p', { text: 'מצב עדכני, פערים מרכזיים ונושאים להחלטה – בכל עשר החלוניות' })),
+    h('div', { class: 'counts' },
+      n('alert') ? h('span', { class: 'st alert', text: n('alert') + ' חריג' }) : null,
+      n('watch') ? h('span', { class: 'st watch', text: n('watch') + ' במעקב' }) : null,
+      n('ok') ? h('span', { class: 'st ok', text: n('ok') + ' תקין' }) : null));
+  body.replaceChildren(hero, h('div', { class: 'row-head' }, h('h2', { text: 'כל הכלים' }), chips), tiles, dash);
+}
+
+function renderResults(q) {
+  const wins = WINDOWS.filter(w => norm([w.name, w.dashName, w.goal, w.cat, w.sections.map(s => s[1]).join(' ')].join(' ')).includes(q));
+  const its = S.items.filter(it => norm([it.title, it.body, it.cycle, it.owner, it.file_name, W[it.w]?.name].join(' ')).includes(q))
+    .sort((a, b) => (b.updated_at || '').localeCompare(a.updated_at || '')).slice(0, 40);
+  const wrap = h('div', { class: 'results' });
+  if (!wins.length && !its.length) wrap.append(h('p', { class: 'empty', text: `לא נמצאו תוצאות עבור "${S.q.trim()}".` }));
+  if (wins.length) wrap.append(h('h2', { text: 'חלוניות' }), wins.map(w =>
+    h('button', { class: 'res', type: 'button', onclick: () => go('w-' + w.id) }, h('b', { text: w.name }), h('small', { text: w.cat + ' · ' + w.goal }))));
+  if (its.length) wrap.append(h('h2', { text: 'תכנים' }), its.map(it => {
+    const w = W[it.w]; const sec = w?.sections.find(s => s[0] === it.s)?.[1] || '';
+    return h('button', { class: 'res', type: 'button', onclick: () => go('w-' + it.w, { flash: it.id }) },
+      h('b', { text: it.title }), h('small', { text: [w?.name, sec, it.cycle && 'מחזור ' + it.cycle].filter(Boolean).join(' · ') }));
+  }));
+  return wrap;
+}
+
+function renderWindow(w) {
+  S.viewKey = 'w';
+  const view = $('#view');
+  const m = S.meta[w.id] || {};
+  const u = lastUpdate(w.id);
+  const all = itemsOf(w.id);
+  const cycles = [...new Set(all.map(i => i.cycle).filter(Boolean))].sort();
+  const items = S.cycle ? all.filter(i => i.cycle === S.cycle) : all;
+  const backTo = S.from === 'dashboard' ? 'dashboard' : 'home';
+  const gaps = lines(m.gaps), decs = lines(m.decisions);
+
+  const status = h('section', { class: 'status', 'aria-label': 'מצב החלונית' },
+    h('div', {}, h('h4', { text: 'מצב עדכני' }), stPill(m.status), m.note ? h('div', { class: 'note', text: m.note }) : null),
+    h('div', {}, h('h4', { text: 'פערים מרכזיים' }), gaps.length ? h('ul', {}, gaps.map(g => h('li', { text: g }))) : h('span', { class: 'muted', text: 'אין פערים רשומים' })),
+    h('div', {}, h('h4', { text: 'נושאים להחלטת מג״ד' }), decs.length ? h('ul', {}, decs.map(g => h('li', { text: g }))) : h('span', { class: 'muted', text: 'אין נושאים פתוחים' })),
+    h('div', {}, h('h4', { text: 'תאריך עדכון' }), u.at ? h('div', {}, h('span', { class: 'date', text: fmtDate(u.at) }), h('small', { class: 'muted', text: byName(u.by) })) : h('span', { class: 'muted', text: 'טרם עודכן' })));
+
+  const toolbar = h('div', { class: 'toolbar' },
+    h('div', { class: 'l' },
+      cycles.length ? h('select', { class: 'sel', id: 'cycleSel', 'aria-label': 'סינון לפי מחזור', onchange: e => { S.cycle = e.target.value; render(); } },
+        h('option', { value: '', text: 'כל המחזורים' }), cycles.map(c => h('option', { value: c, text: 'מחזור ' + c, selected: S.cycle === c }))) : null,
+      S.canEdit ? h('button', { class: 'btn', type: 'button', onclick: () => openMeta(w) }, I.edit(), 'עדכון מצב') : null),
+    S.canEdit ? h('button', { class: 'btn primary', type: 'button', onclick: () => openItem(w) }, '+ הוספת תוכן') : null);
+
+  const sections = w.sections.map(([sid, sname]) => {
+    const list = items.filter(i => i.s === sid).sort((a, b) => (a.due || '9').localeCompare(b.due || '9') || (b.updated_at || '').localeCompare(a.updated_at || ''));
+    return h('section', { class: 'section' },
+      h('div', { class: 'section-h' }, h('h2', {}, sname, list.length ? h('span', { class: 'n', text: list.length }) : null),
+        S.canEdit ? h('button', { class: 'add', type: 'button', onclick: () => openItem(w, null, sid) }, '+ הוספה') : null),
+      list.length ? h('div', { class: 'items' }, list.map(itemCard))
+        : h('p', { class: 'none-yet', text: S.cycle ? 'אין תכנים במחזור הזה.' : (S.canEdit ? 'עדיין אין כאן תכנים. הוסיפו את הראשון עם "+ הוספה".' : 'עדיין אין כאן תכנים.') }));
+  });
+  const links = w.links ? h('div', { class: 'links' }, w.links.map(([to, label]) =>
+    h('button', { class: 'btn', type: 'button', onclick: () => go(to === 'dashboard' ? 'dashboard' : 'w-' + to) }, label, I.fwd()))) : null;
+
+  view.replaceChildren(
+    h('button', { class: 'back', type: 'button', onclick: () => go(backTo) }, I.back(), backTo === 'dashboard' ? 'ללוח הבקרה' : 'לכל הכלים'),
+    h('div', { class: 'w-head' }, h('div', { class: 'eyebrow', text: w.cat + ' · ' + w.goal }), h('h1', { text: w.dashName && S.from === 'dashboard' ? w.dashName : w.name })),
+    w.art ? h('div', { class: 'w-banner', style: `background-image:url(art/${w.art}.jpg)`, role: 'presentation' }) : null,
+    status, links, toolbar, sections);
+  if (S.flashId) { const el = document.getElementById('i-' + S.flashId); if (el) { el.classList.add('flash'); S.flashId = null; } }
+}
+
+function itemCard(it) {
+  const link = safeUrl(it.link);
+  const fileUrl = it.file_path ? S.urls[it.file_path] : null;
+  const main = link || fileUrl;
+  const title = main ? h('a', { href: main, target: '_blank', rel: 'noopener', class: 't', text: it.title }) : h('span', { class: 't', text: it.title });
+  return h('article', { class: 'item', id: 'i-' + it.id },
+    h('div', { class: 'item-top' }, title,
+      h('div', { class: 'r' }, itemPill(it),
+        S.canEdit ? h('button', { class: 'icon-btn', type: 'button', title: 'עריכה', 'aria-label': 'עריכת ' + it.title, onclick: () => openItem(W[it.w], it) }, I.edit()) : null)),
+    it.body ? h('p', { class: 'body', text: it.body }) : null,
+    h('div', { class: 'meta' },
+      it.file_path ? (fileUrl ? h('a', { class: 'file-link', href: fileUrl, target: '_blank', rel: 'noopener' }, I.clip(), it.file_name || 'קובץ מצורף')
+        : h('span', { class: 'file-link' }, I.clip(), it.file_name || 'קובץ מצורף')) : null,
+      link ? h('a', { class: 'file-link', href: link, target: '_blank', rel: 'noopener' }, I.link(), 'פתיחת קישור') : null,
+      it.cycle ? h('span', { text: 'מחזור ' + it.cycle }) : null,
+      it.owner ? h('span', { text: 'אחראי: ' + it.owner }) : null,
+      it.due ? h('span', { class: isLate(it) ? 'late' : null, text: 'יעד: ' + fmtDate(it.due) }) : null,
+      it.updated_at ? h('span', { text: 'עודכן ' + fmtDate(it.updated_at) + byName(it.updated_by) }) : null));
+}
+
+function renderDash() {
+  S.viewKey = 'dash';
+  const ws = DASH_ORDER.map(id => W[id]);
+  const count = c => ws.filter(w => (S.meta[w.id]?.status || '') === c).length;
+  const open = S.items.filter(i => DASH_ORDER.includes(i.w) && (i.status === 'open' || i.status === 'progress')).length;
+  const late = S.items.filter(isLate).sort((a, b) => a.due.localeCompare(b.due));
+  const decs = ws.flatMap(w => lines(S.meta[w.id]?.decisions).map(t => ({ t, w })));
+  const forCdr = S.items.filter(i => i.w === 'decisions' && i.s === 'forcdr' && i.status !== 'done').map(i => ({ t: i.title, w: W.decisions, id: i.id }));
+  const allDecs = [...decs, ...forCdr];
+  const seg = [['alert', 'var(--bad)'], ['watch', 'var(--warn)'], ['ok', 'var(--ok)']];
+  const bar = h('div', { class: 'bar', role: 'img', 'aria-label': `${count('ok')} תקין, ${count('watch')} דורש מעקב, ${count('alert')} חריג, ${count('')} לא עודכן` },
+    seg.map(([c, col]) => count(c) ? h('i', { style: `width:${count(c) * 10}%;background:${col}` }) : null));
+  const summary = h('section', { class: 'summary' },
+    h('div', { class: 'stat' }, h('h4', { text: 'מצב החלוניות' }), bar,
+      h('div', { class: 'legend' }, ['ok', 'watch', 'alert', ''].map(c => h('span', {}, h('b', { text: count(c) }), ' ' + ST[c])))),
+    h('div', { class: 'stat' }, h('h4', { text: 'משימות פתוחות' }), h('div', { class: 'big', text: open })),
+    h('div', { class: 'stat' }, h('h4', { text: 'באיחור' }), h('div', { class: 'big' + (late.length ? ' bad' : ''), text: late.length })),
+    h('div', { class: 'stat' }, h('h4', { text: 'נושאים להחלטה' }), h('div', { class: 'big', text: allDecs.length })));
+  const two = h('div', { class: 'two' },
+    h('section', { class: 'panel' }, h('h3', { text: 'נושאים להחלטת מג״ד' }),
+      allDecs.length ? h('ul', { class: 'plist' }, allDecs.slice(0, 12).map(d => h('li', {},
+        h('button', { class: 'go', type: 'button', text: d.t, onclick: () => go('w-' + d.w.id, { flash: d.id }) }), h('span', { class: 'src', text: d.w.dashName || d.w.name }))))
+        : h('p', { class: 'none-yet', text: 'אין נושאים פתוחים. נושאים נכנסים לכאן מ"עדכון מצב" בכל חלונית.' })),
+    h('section', { class: 'panel' }, h('h3', { text: 'משימות באיחור' }),
+      late.length ? h('ul', { class: 'plist' }, late.slice(0, 12).map(i => h('li', {},
+        h('button', { class: 'go', type: 'button', text: i.title, onclick: () => go('w-' + i.w, { flash: i.id }) }),
+        h('span', { class: 'src', text: [i.owner, 'יעד ' + fmtDate(i.due)].filter(Boolean).join(' · ') }))))
+        : h('p', { class: 'none-yet', text: 'אין משימות באיחור.' })));
+  const table = h('section', { class: 'table', 'aria-label': 'החלוניות' },
+    h('div', { class: 'tr th' }, h('span', { text: 'חלונית ומטרה' }), h('span', { text: 'מצב עדכני' }), h('span', { text: 'פערים מרכזיים' }), h('span', { text: 'להחלטה' }), h('span', { text: 'עודכן' })),
+    ws.map(w => {
+      const m = S.meta[w.id] || {}; const g = lines(m.gaps); const u = lastUpdate(w.id);
+      return h('button', { class: 'tr', type: 'button', onclick: () => go('w-' + w.id) },
+        h('div', {}, h('div', { class: 'nm', text: w.dashName || w.name }), h('div', { class: 'gl', text: w.goal })),
+        h('div', {}, stPill(m.status)),
+        h('div', { class: 'gaps', text: g.length ? g.slice(0, 2).join(' · ') + (g.length > 2 ? ` (+${g.length - 2})` : '') : '—' }),
+        h('div', { class: 'num c-dec' }, h('span', { class: 'lbl', text: 'להחלטה:' }), lines(m.decisions).length || '—'),
+        h('div', { class: 'num c-upd' }, h('span', { class: 'lbl', text: 'עודכן:' }), u.at ? fmtDate(u.at) : '—'));
+    }));
+  $('#view').replaceChildren(
+    h('button', { class: 'back', type: 'button', onclick: () => go('home') }, I.back(), 'לכל הכלים'),
+    h('div', { class: 'd-title' }, h('h1', { text: 'לוח בקרה מג״ד' }), h('p', { text: 'בא״ח גולני · בראש כל חלונית: מצב עדכני, פערים מרכזיים, נושאים להחלטת מג״ד ותאריך עדכון' })),
+    summary, two, table);
+}
+
+/* ---------- admin page ---------- */
+function genPassword() {
+  const abc = 'abcdefghjkmnpqrstuvwxyz23456789';
+  const a = new Uint32Array(10); crypto.getRandomValues(a);
+  return [...a].map(x => abc[x % abc.length]).join('');
+}
+async function renderAdmin() {
+  S.viewKey = 'admin';
+  const { data: mem } = await sb.from('members').select('user_id, role, email, display_name').order('created_at');
+  S.members = mem || S.members;
+  const editors = S.members.filter(m => m.role === 'editor');
+  const site = location.origin + location.pathname;
+
+  const codeErr = h('div', { class: 'err', role: 'alert' });
+  const codeForm = h('form', { novalidate: true, onsubmit: async e => {
+      e.preventDefault(); const code = $('#a-code').value.trim(); codeErr.textContent = '';
+      if (code.length < 6) { codeErr.textContent = 'הקוד צריך לכלול לפחות 6 תווים.'; return; }
+      const b = e.submitter; b.disabled = true;
+      try { await callAdmin('set_unit_code', { code }); $('#a-code').value = ''; toast('קוד היחידה עודכן'); }
+      catch (err) { codeErr.textContent = err.message; }
+      b.disabled = false; } },
+    h('div', { class: 'f' }, h('label', { for: 'a-code', text: 'קוד יחידה חדש' }), h('input', { id: 'a-code', autocomplete: 'off', minlength: '6' }),
+      h('small', { text: 'לפחות 6 תווים. מי שנכנס עם הקוד הקודם יתנתק תוך שעה.' })),
+    codeErr, h('div', {}, h('button', { class: 'btn primary', type: 'submit', text: 'עדכון הקוד' })));
+
+  const addErr = h('div', { class: 'err', role: 'alert' });
+  const addOut = h('div');
+  const addForm = h('form', { novalidate: true, onsubmit: async e => {
+      e.preventDefault(); addErr.textContent = ''; addOut.replaceChildren();
+      const name = $('#e-name').value.trim(), email = $('#e-email').value.trim(), password = $('#e-pass').value;
+      if (!name || !email) { addErr.textContent = 'חסר שם או מייל.'; return; }
+      if (password.length < 8) { addErr.textContent = 'הסיסמה צריכה לכלול לפחות 8 תווים.'; return; }
+      const b = e.submitter; b.disabled = true;
+      try {
+        await callAdmin('add_editor', { email, displayName: name, password });
+        const msg = `${name}, הוספתי אותך כעורך באתר בא״ח גולני.\nכתובת: ${site}\nכניסה: "כניסת עורכים"\nמייל: ${email}\nסיסמה: ${password}\nאפשר להחליף סיסמה מהתפריט אחרי הכניסה.`;
+        addOut.replaceChildren(h('div', { class: 'okbox' }, h('b', { text: 'העורך נוסף. שלחו לו את הפרטים:' }), h('pre', { text: msg }),
+          h('div', {}, h('button', { class: 'btn small', type: 'button', text: 'העתקה', onclick: async ev => {
+            try { await navigator.clipboard.writeText(msg); ev.target.textContent = 'הועתק'; } catch { ev.target.textContent = 'סמנו והעתיקו ידנית'; } } }))));
+        e.target.reset(); renderEditors();
+      } catch (err) { addErr.textContent = err.message; }
+      b.disabled = false; } },
+    h('div', { class: 'grid2' },
+      h('div', { class: 'f' }, h('label', { for: 'e-name', text: 'שם' }), h('input', { id: 'e-name', maxlength: '60' })),
+      h('div', { class: 'f' }, h('label', { for: 'e-email', text: 'מייל' }), h('input', { id: 'e-email', type: 'email', dir: 'ltr', autocomplete: 'off' }))),
+    h('div', { class: 'f' }, h('label', { for: 'e-pass', text: 'סיסמה ראשונית' }),
+      h('div', { style: 'display:flex;gap:8px' }, h('input', { id: 'e-pass', dir: 'ltr', autocomplete: 'off', style: 'flex:1' }),
+        h('button', { class: 'btn', type: 'button', text: 'הפקת סיסמה', onclick: () => { $('#e-pass').value = genPassword(); } }))),
+    addErr, h('div', {}, h('button', { class: 'btn primary', type: 'submit', text: 'הוספת עורך' })), addOut);
+
+  const list = h('div', { id: 'edList' });
+  function renderEditors() {
+    sb.from('members').select('user_id, role, email, display_name').order('created_at').then(({ data }) => {
+      S.members = data || S.members;
+      const eds = S.members.filter(m => m.role === 'editor');
+      list.replaceChildren(...(eds.length ? eds.map(editorRow) : [h('p', { class: 'none-yet', text: 'עדיין אין עורכים. הוסיפו את הראשון בטופס למטה.' })]));
+    });
+  }
+  function editorRow(m) {
+    const row = h('div', { class: 'erow' });
+    const info = h('div', {}, h('b', { text: m.display_name || m.email }), h('div', { class: 'muted', dir: 'ltr', style: 'text-align:right', text: m.email }));
+    let armed = false;
+    const del = h('button', { class: 'btn small danger', type: 'button', text: 'הסרה', onclick: async () => {
+      if (!armed) { armed = true; del.textContent = 'להסיר את העורך?'; return; }
+      del.disabled = true;
+      try { await callAdmin('remove_editor', { userId: m.user_id }); toast('העורך הוסר'); renderEditors(); } catch (err) { toast(err.message); del.disabled = false; } } });
+    const reset = h('button', { class: 'btn small', type: 'button', text: 'איפוס סיסמה', onclick: async () => {
+      const pw = genPassword(); reset.disabled = true;
+      try { await callAdmin('reset_password', { userId: m.user_id, password: pw });
+        row.append(h('div', { class: 'okbox', style: 'width:100%' }, h('span', { text: 'הסיסמה החדשה של ' + (m.display_name || m.email) + ':' }), h('b', { dir: 'ltr', text: pw })));
+      } catch (err) { toast(err.message); }
+      reset.disabled = false; } });
+    row.append(info, h('div', { class: 'acts' }, reset, del));
+    return row;
+  }
+  list.replaceChildren(...(editors.length ? editors.map(editorRow) : [h('p', { class: 'none-yet', text: 'עדיין אין עורכים. הוסיפו את הראשון בטופס למטה.' })]));
+
+  $('#view').replaceChildren(
+    h('button', { class: 'back', type: 'button', onclick: () => go('home') }, I.back(), 'לכל הכלים'),
+    h('div', { class: 'd-title' }, h('h1', { text: 'ניהול האתר' }), h('p', { text: 'עורכים, סיסמאות וקוד היחידה' })),
+    h('div', { class: 'admin-grid' },
+      h('section', { class: 'panel' }, h('h3', { text: 'כתובת האתר' }),
+        h('p', { style: 'margin:0 0 8px', text: 'שלחו את הכתובת לכל מי שצריך. צפייה נכנסת עם קוד היחידה.' }),
+        h('div', { style: 'display:flex;gap:8px;flex-wrap:wrap;align-items:center' }, h('b', { dir: 'ltr', style: 'overflow-wrap:anywhere', text: site }),
+          h('button', { class: 'btn small', type: 'button', text: 'העתקה', onclick: async ev => { try { await navigator.clipboard.writeText(site); ev.target.textContent = 'הועתק'; } catch {} } }))),
+      h('section', { class: 'panel' }, h('h3', { text: 'עורכים' }), list),
+      h('section', { class: 'panel' }, h('h3', { text: 'הוספת עורך' }), addForm),
+      h('section', { class: 'panel' }, h('h3', { text: 'קוד יחידה לצפייה' }), codeForm)));
+}
+
+/* ---------- editing ---------- */
+let editing = null, delArmed = false, removeFile = false;
+document.querySelectorAll('dialog').forEach(dlg => dlg.querySelectorAll('[data-close]').forEach(b => b.onclick = () => dlg.close()));
+
+function openItem(w, it = null, sid = null) {
+  editing = { w, it }; delArmed = false; removeFile = false;
+  $('#itemDlgTitle').textContent = (it ? 'עריכת תוכן' : 'הוספת תוכן') + ' · ' + w.name;
+  $('#f-section').replaceChildren(...w.sections.map(([id, n]) => h('option', { value: id, text: n })));
+  $('#f-section').value = it?.s || sid || w.sections[0][0];
+  $('#f-title').value = it?.title || '';
+  $('#f-body').value = it?.body || '';
+  $('#f-link').value = it?.link || '';
+  $('#f-cycle').value = it?.cycle || S.cycle || '';
+  $('#f-owner').value = it?.owner || '';
+  $('#f-due').value = it?.due || '';
+  $('#f-status').value = it?.status || '';
+  $('#f-file').value = '';
+  $('#cycles').replaceChildren(...[...new Set(S.items.map(i => i.cycle).filter(Boolean))].map(c => h('option', { value: c })));
+  const cur = $('#curFile');
+  if (it?.file_path) {
+    cur.hidden = false;
+    cur.replaceChildren(h('span', {}, I.clip(), ' ', it.file_name || 'קובץ מצורף'),
+      h('button', { class: 'btn small', type: 'button', text: 'הסרה', onclick: () => { removeFile = true; cur.hidden = true; } }));
+  } else cur.hidden = true;
+  $('#itemDel').hidden = !it; $('#itemDel').textContent = 'מחיקה';
+  $('#itemErr').textContent = '';
+  $('#itemDlg').showModal();
+}
+
+$('#itemDel').onclick = async () => {
+  if (!editing?.it) return;
+  if (!delArmed) { delArmed = true; $('#itemDel').textContent = 'למחוק לצמיתות?'; return; }
+  const it = editing.it;
+  const { error } = await sb.from('items').delete().eq('id', it.id);
+  if (error) { $('#itemErr').textContent = writeFailed(error); return; }
+  if (it.file_path) sb.storage.from('files').remove([it.file_path]);
+  $('#itemDlg').close(); toast('התוכן נמחק'); loadData();
+};
+
+$('#itemForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const title = $('#f-title').value.trim();
+  const link = $('#f-link').value.trim();
+  if (!title) { $('#itemErr').textContent = 'חסרה כותרת.'; $('#f-title').focus(); return; }
+  if (link && !safeUrl(link)) { $('#itemErr').textContent = 'הקישור צריך להתחיל ב-https://'; $('#f-link').focus(); return; }
+  const btn = $('#itemSave'); btn.disabled = true; btn.textContent = 'שומר…'; $('#itemErr').textContent = '';
+  const { w, it } = editing;
+  const now = new Date().toISOString();
+  const row = {
+    w: w.id, s: $('#f-section').value, title, body: $('#f-body').value.trim(), link,
+    cycle: $('#f-cycle').value.trim(), owner: $('#f-owner').value.trim(), due: $('#f-due').value || null, status: $('#f-status').value,
+    file_path: removeFile ? '' : (it?.file_path || ''), file_name: removeFile ? '' : (it?.file_name || ''),
+    updated_at: now, updated_by: S.uid,
+  };
+  const oldFile = it?.file_path || '';
+  const f = $('#f-file').files[0];
+  if (f) {
+    if (f.size > 50 * 1024 * 1024) { $('#itemErr').textContent = 'הקובץ גדול מ-50MB. כווצו אותו או הוסיפו קישור.'; btn.disabled = false; btn.textContent = 'שמירה'; return; }
+    btn.textContent = 'מעלה קובץ…';
+    const ext = (f.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8) || 'bin';
+    const path = `${w.id}/${crypto.randomUUID()}.${ext}`;
+    const { error } = await sb.storage.from('files').upload(path, f, { contentType: f.type || 'application/octet-stream', upsert: false });
+    if (error) { $('#itemErr').textContent = 'העלאת הקובץ נכשלה. ' + (/size|large/i.test(error.message) ? 'הקובץ גדול מדי.' : 'נסו שוב.'); btn.disabled = false; btn.textContent = 'שמירה'; return; }
+    row.file_path = path; row.file_name = f.name;
+  }
+  const q = it ? sb.from('items').update(row).eq('id', it.id) : sb.from('items').insert({ ...row, created_by: S.uid });
+  const { error } = await q;
+  btn.disabled = false; btn.textContent = 'שמירה';
+  if (error) { $('#itemErr').textContent = writeFailed(error); if (f) sb.storage.from('files').remove([row.file_path]); return; }
+  if (oldFile && oldFile !== row.file_path) sb.storage.from('files').remove([oldFile]);
+  $('#itemDlg').close(); toast(it ? 'התוכן עודכן' : 'התוכן נוסף'); loadData();
+});
+
+function openMeta(w) {
+  editing = { w };
+  const m = S.meta[w.id] || {};
+  $('#metaDlgTitle').textContent = 'עדכון מצב · ' + w.name;
+  $('#m-status').value = m.status || '';
+  $('#m-note').value = m.note || '';
+  $('#m-gaps').value = m.gaps || '';
+  $('#m-dec').value = m.decisions || '';
+  $('#metaErr').textContent = '';
+  $('#metaDlg').showModal();
+}
+$('#metaForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('#metaSave'); btn.disabled = true;
+  const { error } = await sb.from('window_meta').upsert({
+    id: editing.w.id, status: $('#m-status').value, note: $('#m-note').value.trim(), gaps: $('#m-gaps').value.trim(), decisions: $('#m-dec').value.trim(),
+    updated_at: new Date().toISOString(), updated_by: S.uid });
+  btn.disabled = false;
+  if (error) { $('#metaErr').textContent = writeFailed(error); return; }
+  $('#metaDlg').close(); toast('המצב עודכן'); loadData();
+});
+
+$('#passForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const a = $('#p-new').value, b = $('#p-again').value;
+  if (a.length < 8) { $('#passErr').textContent = 'לפחות 8 תווים.'; return; }
+  if (a !== b) { $('#passErr').textContent = 'הסיסמאות לא תואמות.'; return; }
+  $('#passSave').disabled = true;
+  const { error } = await sb.auth.updateUser({ password: a });
+  $('#passSave').disabled = false;
+  if (error) { $('#passErr').textContent = /different|same/i.test(error.message) ? 'הסיסמה החדשה זהה לישנה.' : 'ההחלפה לא הצליחה. נסו שוב.'; return; }
+  $('#passDlg').close(); toast('הסיסמה הוחלפה');
+});
+
+/* ---------- sign-in ---------- */
+let gateMode = 'code';
+async function showGate(msg = '') {
+  S.role = null; S.viewKey = null;
+  $('#top').hidden = true; $('#foot').hidden = true;
+  let needsSetup = false;
+  try { needsSetup = (await callAdmin('status')).needsSetup; } catch {}
+  if (gateMode === 'setup' && !needsSetup) gateMode = 'code';
+  const err = h('div', { class: 'err', role: 'alert', text: msg });
+  const busy = (form, on, label) => { const b = form.querySelector('[type=submit]'); b.disabled = on; if (label) b.textContent = label; };
+
+  const codeForm = h('form', { novalidate: true, onsubmit: async e => {
+      e.preventDefault(); err.textContent = '';
+      const code = $('#g-code').value.trim(); if (!code) { err.textContent = 'הקלידו את קוד היחידה.'; return; }
+      busy(e.target, true, 'נכנס…');
+      const { error } = await sb.auth.signInWithPassword({ email: VIEWER_EMAIL, password: code });
+      if (error) { busy(e.target, false, 'כניסה'); err.textContent = /invalid/i.test(error.message) ? 'הקוד שגוי. בדקו מול המפקד ונסו שוב.' : 'הכניסה לא הצליחה. נסו שוב בעוד דקה.'; }
+    } },
+    h('div', { class: 'f' }, h('label', { for: 'g-code', text: 'קוד יחידה' }),
+      h('input', { id: 'g-code', class: 'code-input', type: 'password', autocomplete: 'current-password', inputmode: 'text', dir: 'ltr' })),
+    h('button', { class: 'btn primary wide', type: 'submit', text: 'כניסה' }));
+
+  const edForm = h('form', { novalidate: true, onsubmit: async e => {
+      e.preventDefault(); err.textContent = '';
+      const email = $('#g-email').value.trim(), password = $('#g-pass').value;
+      if (!email || !password) { err.textContent = 'הקלידו מייל וסיסמה.'; return; }
+      busy(e.target, true, 'נכנס…');
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) { busy(e.target, false, 'כניסה'); err.textContent = /invalid/i.test(error.message) ? 'המייל או הסיסמה שגויים.' : 'הכניסה לא הצליחה. נסו שוב בעוד דקה.'; }
+    } },
+    h('div', { class: 'f' }, h('label', { for: 'g-email', text: 'מייל' }), h('input', { id: 'g-email', type: 'email', autocomplete: 'username', dir: 'ltr' })),
+    h('div', { class: 'f' }, h('label', { for: 'g-pass', text: 'סיסמה' }), h('input', { id: 'g-pass', type: 'password', autocomplete: 'current-password', dir: 'ltr' })),
+    h('button', { class: 'btn primary wide', type: 'submit', text: 'כניסה' }),
+    h('p', { class: 'hint', text: 'שכחתם סיסמה? מנהל האתר יכול לאפס אותה.' }));
+
+  const setupForm = h('form', { novalidate: true, onsubmit: async e => {
+      e.preventDefault(); err.textContent = '';
+      const displayName = $('#s-name').value.trim(), email = $('#s-email').value.trim(), password = $('#s-pass').value, again = $('#s-again').value, unitCode = $('#s-code').value.trim();
+      if (password !== again) { err.textContent = 'הסיסמאות לא תואמות.'; return; }
+      busy(e.target, true, 'מגדיר…');
+      try {
+        await callAdmin('setup', { displayName, email, password, unitCode });
+        const { error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) throw new Error('ההגדרה נשמרה, אבל הכניסה נכשלה. נסו להיכנס כעורך.');
+      } catch (ex) { busy(e.target, false, 'שמירה וכניסה'); err.textContent = ex.message; }
+    } },
+    h('p', { class: 'hint', style: 'text-align:right;margin:0', text: 'הגדרה חד-פעמית של מנהל האתר וקוד היחידה.' }),
+    h('div', { class: 'f' }, h('label', { for: 's-name', text: 'השם שלך' }), h('input', { id: 's-name', maxlength: '60' })),
+    h('div', { class: 'f' }, h('label', { for: 's-email', text: 'המייל שלך' }), h('input', { id: 's-email', type: 'email', autocomplete: 'username', dir: 'ltr' })),
+    h('div', { class: 'grid2' },
+      h('div', { class: 'f' }, h('label', { for: 's-pass', text: 'סיסמה' }), h('input', { id: 's-pass', type: 'password', autocomplete: 'new-password', dir: 'ltr' }), h('small', { text: 'לפחות 8 תווים' })),
+      h('div', { class: 'f' }, h('label', { for: 's-again', text: 'שוב, לאימות' }), h('input', { id: 's-again', type: 'password', autocomplete: 'new-password', dir: 'ltr' }))),
+    h('div', { class: 'f' }, h('label', { for: 's-code', text: 'קוד יחידה לצפייה' }), h('input', { id: 's-code', autocomplete: 'off', dir: 'ltr' }),
+      h('small', { text: 'לפחות 6 תווים. את הקוד הזה תפיצו ביחידה. אפשר להחליף אותו בכל רגע.' })),
+    h('button', { class: 'btn primary wide', type: 'submit', text: 'שמירה וכניסה' }));
+
+  const tab = (mode, label) => h('button', { type: 'button', role: 'tab', 'aria-selected': String(gateMode === mode), text: label,
+    onclick: () => { gateMode = mode; showGate(); } });
+  $('#view').replaceChildren(h('div', { class: 'gate' }, h('div', { class: 'gate-card' },
+    h('div', { class: 'logo' }, h('img', { src: 'art/tree.png', alt: '' }), h('b', { text: 'בא״ח גולני' }), h('span', { text: 'אגף ההדרכה · כל הכלים במקום אחד' })),
+    gateMode === 'setup' ? null : h('div', { class: 'tabs', role: 'tablist' }, tab('code', 'קוד יחידה'), tab('editor', 'כניסת עורכים')),
+    gateMode === 'code' ? codeForm : gateMode === 'editor' ? edForm : setupForm,
+    err,
+    needsSetup && gateMode !== 'setup' ? h('p', { class: 'hint' }, 'האתר עוד לא הוגדר. ', h('button', { class: 'linkish', type: 'button', text: 'הגדרה ראשונית', onclick: () => { gateMode = 'setup'; showGate(); } })) : null,
+    gateMode === 'setup' ? h('p', { class: 'hint' }, h('button', { class: 'linkish', type: 'button', text: 'חזרה לכניסה', onclick: () => { gateMode = 'code'; showGate(); } })) : null)));
+  (document.getElementById('g-code') || document.getElementById('g-email') || document.getElementById('s-name'))?.focus();
+}
+
+async function enter(session) {
+  const { data: me, error } = await sb.from('members').select('role, display_name, email').eq('user_id', session.user.id).maybeSingle();
+  if (error || !me) { await sb.auth.signOut(); return showGate('החשבון הזה לא מורשה לאתר. פנו למנהל האתר.'); }
+  S.session = session; S.uid = session.user.id; S.role = me.role; S.canEdit = me.role === 'editor' || me.role === 'admin';
+  const label = me.role === 'viewer' ? 'צופה' : (me.display_name || me.email);
+  $('#menuBtn').textContent = (label || '?').trim().charAt(0);
+  $('#menuName').textContent = label; $('#menuRole').textContent = ROLE[me.role];
+  $('#mPass').hidden = !S.canEdit; $('#mAdmin').hidden = me.role !== 'admin';
+  $('#top').hidden = false; $('#foot').hidden = false;
+  readHash(); S.viewKey = null;
+  $('#view').replaceChildren(h('p', { class: 'loading', text: 'טוען…' }));
+  await loadData(); render(); subscribe();
+}
+
+/* ---------- boot ---------- */
+$('#brandBtn').onclick = () => go('home');
+$('#dashBtn').onclick = () => go('dashboard');
+$('#mOut').onclick = async () => { $('#menu').open = false; channel?.unsubscribe(); await sb.auth.signOut(); };
+$('#mPass').onclick = () => { $('#menu').open = false; $('#p-new').value = ''; $('#p-again').value = ''; $('#passErr').textContent = ''; $('#passDlg').showModal(); };
+$('#mAdmin').onclick = () => go('admin');
+document.addEventListener('click', e => { if (!e.target.closest('#menu')) $('#menu').open = false; });
+
+let entered = null;
+sb.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    if (entered !== session.user.id) { entered = session.user.id; setTimeout(() => enter(session), 0); }
+  } else {
+    entered = null; channel?.unsubscribe(); setTimeout(() => showGate(), 0);
+  }
+});
+</script>
+</body>
+</html>
