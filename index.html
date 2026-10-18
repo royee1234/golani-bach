@@ -37,6 +37,9 @@
   --f-display: "Secular One", "Assistant", "Segoe UI", Arial, sans-serif;
   --f-body: "Assistant", "Segoe UI", Arial, sans-serif;
   --r: 18px;
+  /* login tree */
+  --tree-trunk: #2A3D2C; --leaf-1: #1E4A2D; --leaf-2: #2F6B43; --leaf-3: #5A8F5F; --leaf-4: #9CC08F;
+  --sun: rgba(236, 199, 84, .42); --ground: #DCE4D0;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -46,6 +49,8 @@
     --ok: #7FD39C; --ok-bg: #1C3324; --warn: #E9B865; --warn-bg: #3A2D16;
     --bad: #F09486; --bad-bg: #3D1F1B; --none: #A5ADA6; --none-bg: #262D27;
     --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
+    --tree-trunk: #7E957F; --leaf-1: #2C5A39; --leaf-2: #3F7A50; --leaf-3: #63A06E; --leaf-4: #9CCBA6;
+    --sun: rgba(214, 176, 66, .16); --ground: #1A231C;
   }
   .brand img { filter: brightness(2.6) saturate(.6); }
 }
@@ -84,10 +89,13 @@ h1, h2, h3 { margin: 0; text-wrap: balance; }
 .menu .pop button:hover { background: var(--surface-2); }
 
 /* login */
-.gate { min-height: calc(100dvh - 40px); display: grid; place-items: center; padding-block: 24px; }
-.gate-card { width: min(420px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 28px 24px; box-shadow: var(--shadow); display: grid; gap: 16px; }
+.gate { min-height: calc(100dvh - 40px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: center; justify-items: center; gap: 24px; padding-block: 24px; }
+.gate-art { width: 100%; height: min(78dvh, 640px); position: relative; order: 2; }
+.gate-art canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.gate-card { position: relative; z-index: 1;
+  width: min(420px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 28px 24px; box-shadow: var(--shadow); display: grid; gap: 16px; }
 .gate-card .logo { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
-.gate-card .logo img { width: 62px; height: 72px; }
+.gate-card .logo img { display: none; }
 .gate-card .logo b { font-family: var(--f-display); font-weight: 400; font-size: 1.9rem; line-height: 1; color: var(--brand); }
 .gate-card .logo span { color: var(--ink-2); }
 .tabs { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-2); border-radius: 12px; padding: 4px; gap: 4px; }
@@ -267,6 +275,10 @@ dialog h2 { font-size: 1.3rem; font-weight: 800; }
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 12px; font-weight: 600; z-index: 10; max-width: calc(100vw - 32px); }
 .loading { padding: 80px 0; text-align: center; color: var(--ink-2); }
 
+@media (max-width: 860px) {
+  .gate { grid-template-columns: 1fr; gap: 0; align-content: start; padding-top: 4px; }
+  .gate-art { height: 38dvh; min-height: 240px; margin-bottom: -20px; order: 0; }
+}
 @media (max-width: 760px) {
   .status { grid-template-columns: 1fr 1fr; }
   .summary { grid-template-columns: 1fr 1fr; }
@@ -928,6 +940,107 @@ $('#passForm').addEventListener('submit', async e => {
   $('#passDlg').close(); toast('הסיסמה הוחלפה');
 });
 
+/* ---------- sign-in tree: drawn once per load, grows in, then stays ---------- */
+let treeEl = null;
+function treeArt() {
+  if (treeEl) return treeEl;
+  const canvas = h('canvas', { 'aria-hidden': 'true' });
+  treeEl = h('div', { class: 'gate-art' }, canvas);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let model = null, start = 0, done = reduce;
+
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+  // Branches as quadratic segments, leaves as blobs; same seed every time so the tree keeps its shape.
+  function build(w, hgt) {
+    const r = rng(1948);
+    const L0 = Math.min(w * 0.125, hgt * 0.165);
+    const base = { x: w / 2, y: hgt * 0.9 };
+    const segs = [], blobs = [], MAX = 7;
+    function branch(x, y, ang, len, width, d) {
+      const x2 = x + Math.cos(ang) * len, y2 = y + Math.sin(ang) * len;
+      const bend = (r() - .5) * len * .35;
+      const cx = (x + x2) / 2 + Math.cos(ang + Math.PI / 2) * bend, cy = (y + y2) / 2 + Math.sin(ang + Math.PI / 2) * bend;
+      segs.push({ x, y, cx, cy, x2, y2, w: width, d });
+      if (d >= 3) {
+        const n = d >= 5 ? 3 : 2;
+        for (let i = 0; i < n; i++) blobs.push({ x: x2 + (r() - .5) * L0 * .35, y: y2 + (r() - .5) * L0 * .3, r: L0 * (.13 + r() * .12), d, tone: r() });
+      }
+      if (d >= MAX) return;
+      const kids = d < 2 ? 3 : (r() < .55 ? 2 : 3);
+      const spread = d === 0 ? 1.15 : d < 3 ? .95 : .75;
+      for (let i = 0; i < kids; i++) {
+        const t = kids === 1 ? 0 : i / (kids - 1) - .5;
+        let a = ang + t * spread + (r() - .5) * .3;
+        a = Math.max(-Math.PI + .25, Math.min(-.25, a)); // keep growing upward and outward
+        branch(x2, y2, a, len * (.7 + r() * .12), width * .66, d + 1);
+      }
+    }
+    branch(base.x, base.y, -Math.PI / 2, L0 * 1.15, L0 * .26, 0);
+    const roots = [-.35, -.15, .15, .38].map(k => ({ k, len: L0 * (.45 + r() * .3) }));
+    let minY = Infinity; for (const b of blobs) minY = Math.min(minY, b.y - b.r);
+    blobs.sort((a, b) => a.y - b.y);
+    return { w, hgt, L0, base, segs, blobs, roots, canopyY: (minY + base.y - L0 * 1.15) / 2 };
+  }
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function draw(p) {
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    const ctx = canvas.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const { w, hgt, L0, base, segs, blobs, roots, canopyY } = model;
+    const css = getComputedStyle(document.documentElement), c = n => css.getPropertyValue(n).trim();
+    ctx.clearRect(0, 0, w, hgt);
+    // sun behind the canopy
+    const sunR = Math.min(w, hgt) * .36 * (.85 + .15 * Math.min(1, p * 2));
+    ctx.fillStyle = c('--sun'); ctx.beginPath(); ctx.arc(base.x + L0 * .25, canopyY, sunR, 0, Math.PI * 2); ctx.fill();
+    // ground
+    ctx.fillStyle = c('--ground'); ctx.beginPath(); ctx.ellipse(base.x, base.y + L0 * .08, L0 * 1.9, L0 * .2, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = c('--tree-trunk'); ctx.lineCap = 'round';
+    // roots
+    for (const rt of roots) {
+      ctx.lineWidth = L0 * .07; ctx.beginPath(); ctx.moveTo(base.x, base.y - L0 * .05);
+      ctx.quadraticCurveTo(base.x + rt.k * rt.len * 1.2, base.y, base.x + rt.k * rt.len * 2, base.y + L0 * .06); ctx.stroke();
+    }
+    // branches, depth by depth
+    const steps = 7 + 2;
+    for (const s of segs) {
+      const t = Math.max(0, Math.min(1, p * steps - s.d)); if (t <= 0) continue;
+      const ax = lerp(s.x, s.cx, t), ay = lerp(s.y, s.cy, t), bx = lerp(s.cx, s.x2, t), by = lerp(s.cy, s.y2, t);
+      ctx.lineWidth = Math.max(1, s.w); ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.quadraticCurveTo(ax, ay, lerp(ax, bx, t), lerp(ay, by, t)); ctx.stroke();
+    }
+    // leaves: shade, body, highlight
+    const lp = Math.max(0, Math.min(1, (p - .45) / .55)); if (lp <= 0) return;
+    const tones = [c('--leaf-1'), c('--leaf-2'), c('--leaf-3')];
+    for (const pass of [0, 1, 2]) for (const b of blobs) {
+      const appear = Math.max(0, Math.min(1, lp * 1.6 - (b.d - 3) * .12)); if (!appear) continue;
+      const rr = b.r * appear * (pass === 0 ? 1.12 : pass === 1 ? 1 : .5);
+      ctx.globalAlpha = pass === 2 ? .55 : .92;
+      ctx.fillStyle = pass === 0 ? tones[0] : pass === 1 ? tones[b.tone < .4 ? 1 : 2] : c('--leaf-4');
+      ctx.beginPath(); ctx.arc(b.x + (pass === 0 ? -rr * .12 : pass === 2 ? rr * .35 : 0), b.y + (pass === 0 ? rr * .14 : pass === 2 ? -rr * .45 : 0), rr, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function fit() {
+    const box = treeEl.getBoundingClientRect(); if (!box.width || !box.height) return;
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    canvas.width = Math.round(box.width * dpr); canvas.height = Math.round(box.height * dpr);
+    model = build(box.width, box.height);
+    if (done) draw(1);
+  }
+  function frame(now) {
+    if (!model) { requestAnimationFrame(frame); return; }
+    if (!start) start = now;
+    const t = Math.min(1, (now - start) / 2200), p = 1 - Math.pow(1 - t, 3);
+    draw(p); if (t < 1) requestAnimationFrame(frame); else done = true;
+  }
+  new ResizeObserver(fit).observe(treeEl);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (model && done) draw(1); });
+  if (!reduce) requestAnimationFrame(frame);
+  return treeEl;
+}
+
 /* ---------- sign-in ---------- */
 let gateMode = 'code';
 async function showGate(msg = '') {
@@ -986,7 +1099,7 @@ async function showGate(msg = '') {
 
   const tab = (mode, label) => h('button', { type: 'button', role: 'tab', 'aria-selected': String(gateMode === mode), text: label,
     onclick: () => { gateMode = mode; showGate(); } });
-  $('#view').replaceChildren(h('div', { class: 'gate' }, h('div', { class: 'gate-card' },
+  $('#view').replaceChildren(h('div', { class: 'gate' }, treeArt(), h('div', { class: 'gate-card' },
     h('div', { class: 'logo' }, h('img', { src: 'art/tree.png', alt: '' }), h('b', { text: 'בא״ח גולני' }), h('span', { text: 'אגף ההדרכה · כל הכלים במקום אחד' })),
     gateMode === 'setup' ? null : h('div', { class: 'tabs', role: 'tablist' }, tab('code', 'קוד יחידה'), tab('editor', 'כניסת עורכים')),
     gateMode === 'code' ? codeForm : gateMode === 'editor' ? edForm : setupForm,
